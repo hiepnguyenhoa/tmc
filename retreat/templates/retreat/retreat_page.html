@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+
+{% block content %}
+<div class="retreat-page">
+    <!-- Page Title -->
+    <h1>{{ page.title }}</h1>
+
+    <!-- Teacher Biography -->
+    {% if page.teacher_biography %}
+        <section class="teacher-biography">
+            <h2>About the Teacher</h2>
+            <div class="teacher-info">
+                {% if page.teacher_biography.image %}
+                    <!-- Use wagtailimages_tags to render the image -->
+                    {% image page.teacher_biography.image original as teacher_image %}
+                    <img src="{{ teacher_image.url }}" alt="{{ page.teacher_biography.name }}">
+                {% endif %}
+                <h3>{{ page.teacher_biography.name }}</h3>
+                <div class="biography">
+                    {{ page.teacher_biography.biography|richtext }}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+     <!-- Available Retreats -->
+    {% if page.grouped_available_retreats %}
+        <section class="available-retreats">
+            <h2>Available Retreats</h2>
+            {% for category, retreats in page.grouped_available_retreats.items %}
+                <h3>{{ category }}</h3>
+                <ul>
+                    {% for retreat in retreats %}
+                        <li>
+                            {{ retreat.available_retreat.start_date }} - {{ retreat.available_retreat.end_date }}<br>
+                            {% if retreat.available_retreat.note %}
+                                <em>{{ retreat.available_retreat.note }}</em>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </section>
+    {% endif %}
+
+    <!-- Coordinators -->
+    {% if page.coordinators.all %}
+        <section class="coordinators">
+            <h2>Coordinators</h2>
+            <ul>
+                {% for coordinator in page.coordinators.all %}
+                    <li>
+                        <strong>{{ coordinator.coordinator.name }}</strong><br>
+                        {% if coordinator.coordinator.phone_number %}
+                            Phone: {{ coordinator.coordinator.phone_number }}<br>
+                        {% endif %}
+                        {% if coordinator.coordinator.email %}
+                            Email: <a href="mailto:{{ coordinator.coordinator.email }}">{{ coordinator.coordinator.email }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
+    <!-- Zoom Information -->
+    {% if page.zoom_link or page.zoom_room_id or page.zoom_room_password %}
+        <section class="zoom-information">
+            <h2>Zoom Information</h2>
+            <ul>
+                {% if page.zoom_link %}
+                    <li><strong>Zoom Link:</strong> <a href="{{ page.zoom_link }}" target="_blank">{{ page.zoom_link }}</a></li>
+                {% endif %}
+                {% if page.zoom_room_id %}
+                    <li><strong>Room ID:</strong> {{ page.zoom_room_id }}</li>
+                {% endif %}
+                {% if page.zoom_room_password %}
+                    <li><strong>Room Password:</strong> {{ page.zoom_room_password }}</li>
+                {% endif %}
+            </ul>
+        </section>
+    {% endif %}
+</div>
+{% endblock %}
