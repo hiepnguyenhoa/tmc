@@ -31,16 +31,16 @@
         {% endblock %}
     </head>
 
-    <body class="{% block body_class %}{% endblock %}">
+    <body>
         {% wagtailuserbar %}
 
         {% block content %}{% endblock %}
 
-        {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/tmc.js' %}"></script>
+<!--        {# Global javascript #}-->
+<!--        <script type="text/javascript" src="{% static 'js/tmc.js' %}"></script>-->
 
-        {% block extra_js %}
-        {# Override this in templates to add extra javascript #}
-        {% endblock %}
+<!--        {% block extra_js %}-->
+<!--        {# Override this in templates to add extra javascript #}-->
+<!--        {% endblock %}-->
     </body>
 </html>
