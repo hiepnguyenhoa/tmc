@@ -1,18 +1,28 @@
 {% extends "base.html" %}
-
 {% load wagtailcore_tags %}
 
-{% block body_class %}template-blogindexpage{% endblock %}
-
 {% block content %}
-    <h1>{{ page.title }}</h1>
+<div class="retreat-index-page">
+    <!-- Page Title -->
+    <div class="page-title">
+        <h1>{{ page.title }}</h1>
+        {% if page.intro %}
+        <p class="intro">{{ page.intro|safe }}</p>
+        {% endif %}
+    </div>
 
-    <div class="intro">{{ page.intro|richtext }}</div>
-
-    {% for post in page.get_children %}
-        <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
-        {{ post.specific.intro }}
-        {{ post.specific.body|richtext }}
+    <!-- Retreat Categories and Options -->
+    {% for category, retreats in page.grouped_available_retreats.items %}
+    <div class="retreat-category">
+        <h3 class="category-name">{{ category }}</h3>
+        <ul class="retreat-list">
+            {% for retreat in retreats %}
+            <li class="retreat-item">
+                {{ retreat.available_retreat.start_date }} - {{ retreat.available_retreat.end_date }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
     {% endfor %}
-
+</div>
 {% endblock %}

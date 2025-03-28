@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "retreat",
     "home",
     "search",
+    "base",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",

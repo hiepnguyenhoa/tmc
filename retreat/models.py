@@ -4,86 +4,9 @@ from django.db import models
 from modelcluster.fields import ParentalKey
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField
-from wagtail.images.models import Image
 from wagtail.models import Page
-from wagtail.snippets.models import register_snippet
 
-
-@register_snippet
-class RetreatCategory(models.Model):
-    name = models.CharField(max_length=255)
-
-    panels = [
-        FieldPanel("name"),
-    ]
-
-    class Meta:
-        verbose_name_plural = "Retreat Categories"
-
-    def __str__(self):
-        return self.name
-
-
-@register_snippet
-class TeacherBiography(models.Model):
-    name = models.CharField(max_length=255)
-    biography = RichTextField()
-    image = models.ForeignKey(
-        Image,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="+"
-    )
-
-    panels = [
-        FieldPanel("name"),
-        FieldPanel("biography"),
-        FieldPanel("image"),
-    ]
-
-    def __str__(self):
-        return self.name
-
-
-@register_snippet
-class Coordinator(models.Model):
-    name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=20, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
-
-    panels = [
-        FieldPanel("name"),
-        FieldPanel("phone_number"),
-        FieldPanel("email"),
-    ]
-
-    def __str__(self):
-        return self.name
-
-
-@register_snippet
-class AvailableRetreat(models.Model):
-    category = models.ForeignKey(
-        RetreatCategory,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="available_retreats",
-    )
-    start_date = models.DateField()
-    end_date = models.DateField()
-    note = models.TextField(blank=True, null=True)
-
-    panels = [
-        FieldPanel("category"),
-        FieldPanel("start_date"),
-        FieldPanel("end_date"),
-        FieldPanel("note"),
-    ]
-
-    def __str__(self):
-        return f"{self.start_date} - {self.end_date}"
+from base.models import AvailableRetreat, Coordinator, TeacherBiography
 
 
 class RetreatPageAvailableRetreat(models.Model):
