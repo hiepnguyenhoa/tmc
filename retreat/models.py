@@ -116,7 +116,6 @@ class RetreatIndexPage(Page):
 
         # Get all RetreatPage instances under this index page
         retreats = RetreatPage.objects.live().descendant_of(self)
-        print(f"DEBUG: Found {retreats.count()} RetreatPage(s) under this RetreatIndexPage.")
 
         # Prepare a list of all available retreats starting in the current year or later
         available_retreats = []
@@ -125,27 +124,30 @@ class RetreatIndexPage(Page):
             filtered_available_retreats = retreat.retreat_page_available_retreats.filter(
                 available_retreat__start_date__year__gte=current_year
             )
-            print(f"DEBUG: RetreatPage '{retreat.title}' has {filtered_available_retreats.count()} available retreat(s) starting in {current_year} or later.")
             available_retreats.extend(filtered_available_retreats)
 
-        # Sort the available retreats by category display order (descending) and category name
-        sorted_retreats = sorted(
-            available_retreats,
-            key=lambda r: (
-                r.available_retreat.category.display_order if r.available_retreat.category else -1,
-                r.available_retreat.category.name if r.available_retreat.category else "Uncategorized",
-            ),
+        # Group the available retreats by year
+        grouped_by_year = groupby(
+            sorted(available_retreats, key=lambda r: r.available_retreat.start_date.year),
+            key=lambda r: r.available_retreat.start_date.year
         )
 
-        # Group the sorted retreats by category name
-        grouped = groupby(
-            sorted_retreats,
-            key=lambda r: r.available_retreat.category.name if r.available_retreat.category else "Uncategorized"
-        )
+        # For each year, group the retreats by category
+        grouped_data = {}
+        for year, retreats_in_year in grouped_by_year:
+            retreats_in_year = list(retreats_in_year)  # Convert groupby iterator to list
+            grouped_by_category = groupby(
+                sorted(
+                    retreats_in_year,
+                    key=lambda r: (
+                        r.available_retreat.category.display_order if r.available_retreat.category else -1,
+                        r.available_retreat.category.name if r.available_retreat.category else "Uncategorized",
+                    ),
+                ),
+                key=lambda r: r.available_retreat.category.name if r.available_retreat.category else "Uncategorized"
+            )
+            grouped_data[year] = {category: list(items) for category, items in grouped_by_category}
 
-        # Return grouped data as a dictionary
-        grouped_data = {category: list(items) for category, items in grouped}
-        print(f"DEBUG: Grouped data: {grouped_data}")
         return grouped_data
 
     def get_context(self, request):

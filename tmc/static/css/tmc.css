@@ -1,8 +1,7 @@
-
 body {
     font-family: 'Georgia', serif;
     margin: 0;
-    /*background-color: #dad8d8;*/
+    background-color: #fefce8;
     color: #333;
 }
 
@@ -18,9 +17,22 @@ body {
 .page-title {
     text-align: center;
     margin: 20px 0;
+    margin-bottom: 40px;
     /*font-size: 2rem;*/
     font-weight: bold;
     color: #333;
+}
+
+.page-title h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.page-title .intro {
+    font-size: 1.2rem;
+    color: #666;
+    margin-top: 10px;
 }
 
 /* Main content layout */
@@ -194,4 +206,70 @@ hr {
     margin-bottom: 10px;
     font-size: 1rem;
     color: #333;
+}
+
+/* Retreat Year Section */
+.retreat-year {
+    margin-bottom: 40px;
+}
+
+.year-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Retreat Index Page */
+.retreat-index-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* Retreat Categories Grid */
+.retreat-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 20px;
+}
+
+.retreat-category {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.category-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #5a2d1a; /* Brown color for the header */
+}
+
+.retreat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.retreat-item {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.retreat-item a {
+    text-decoration: none;
+    color: #333;
+}
+
+.retreat-item a:hover {
+    text-decoration: underline;
 }
