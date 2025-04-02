@@ -47,29 +47,24 @@ tmc-website
    pip install -r requirements.txt
    ```
 
-4. **Run migrations:**
-   ```
-   python manage.py migrate
-   ```
-
-5. **Create a superuser:**
-   ```
-   python manage.py createsuperuser
-   ```
-
-6. **Run the development server:**
-   ```
-   python manage.py runserver
-   ```
-
-7. **Run makemigrations:**
+4. **Run makemigrations:**
    ```
    python manage.py makemigrations
    ```
 
-8. **Run migrate:**
+5. **Run migrate:**
    ```
    python manage.py migrate
+   ```
+
+6. **Create a superuser:**
+   ```
+   python manage.py createsuperuser
+   ```
+
+7. **Run the development server:**
+   ```
+   python manage.py runserver
    ```
 
 ## Usage

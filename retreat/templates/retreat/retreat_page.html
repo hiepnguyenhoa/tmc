@@ -5,9 +5,14 @@
 
 {% block content %}
 <div class="retreat-page">
+    <!-- Page Title -->
     <div class="page-title">
-        <h2>Vipassanā Meditation Retreat With {{page.teacher_biography.name}}</h2>
+        <h1>{{ page.title }}</h1>
+        {% if page.intro %}
+        <p class="intro">{{ page.intro|safe }}</p>
+        {% endif %}
     </div>
+
     <!-- Main Content -->
     <div class="main-content">
         <!-- Left Panel -->
@@ -21,9 +26,6 @@
                     {% image page.teacher_biography.image width-400 as teacher_image %}
                     <img class="teacher-portrait" src="{{ teacher_image.url }}" alt="{{ page.teacher_biography.name }}">
                     {% endif %}
-                    <!--            <div class="biography">-->
-                    <!--                {{ page.teacher_biography.biography|richtext }}-->
-                    <!--            </div>-->
                 </div>
             </div>
             {% endif %}
@@ -34,7 +36,6 @@
             <section>👤 <a href="#">Teacher's Biography</a></section>
             <!-- Coordinators -->
             {% if page.coordinators.all %}
-
             <section class="coordinators">
                 <strong>Coordinators</strong><br>
                 {% for coordinator in page.coordinators.all %}
@@ -65,31 +66,33 @@
                 {% endif %}
             </section>
             {% endif %}
-            <!--        <a href="#" class="link-button">📘 Retreat Info</a>-->
-            <!--        <a href="#" class="link-button">📽️ Dhamma Talk Recordings<br><small>English | Viet</small></a>-->
-            <!--        <a href="#" class="link-button">💰 Donations<br><small>English | Viet</small></a>-->
         </div>
     </div>
-    <!-- Available Retreats -->
-    {% if page.grouped_available_retreats %}
-    <section class="available-retreats">
-        <h3>Available Retreats</h3>
-        {% for category, retreats in page.grouped_available_retreats.items %}
-        <div class="retreat-duration">
-            {% for retreat in retreats %}
-            <div class="duration-option">
-                <span>{{category}}</span> &nbsp;
-                {{ retreat.available_retreat.start_date }} - {{ retreat.available_retreat.end_date }}
-                {% if retreat.available_retreat.note %}
-                <div class="duration-note">&nbsp;({{ retreat.available_retreat.note }})</div>
-                {% endif %}
-                <div class="duration-enroll" style="text-align: right;"><a href="">Registration/Ghi danh</a></div>
-            </div>
 
-            {% endfor %}
+    <!-- Available Retreat Durations -->
+    {% if page.grouped_retreat_durations %}
+    <div class="available-retreats">
+        <h2>Available Retreats</h2>
+        {% for category, durations in page.grouped_retreat_durations.items %}
+        <div class="retreat-category">
+            <h3 class="category-name">
+                {{ category }}
+            </h3>
+            <ul class="retreat-durations">
+                {% for duration in durations %}
+                <li class="retreat-duration">
+                    {{ duration.start_date|date:"M j, Y" }} – {{ duration.end_date|date:"M j, Y" }}
+                    <div class="register-button">
+                        <a href="{% url 'register_page' duration.id %}" class="btn btn-primary">Register</a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
         {% endfor %}
-    </section>
+    </div>
+    {% else %}
+    <p>No available retreats found.</p>
     {% endif %}
 </div>
 {% endblock %}

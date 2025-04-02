@@ -17,14 +17,14 @@
         <div class="retreat-year">
             <h2 class="year-title">{{ year }} Retreat Schedule</h2>
             <div class="retreat-categories">
-                {% for category, retreats in categories.items %}
+                {% for category, durations in categories.items %}
                 <div class="retreat-category">
                     <h3 class="category-name">{{ category }}</h3>
                     <ul class="retreat-list">
-                        {% for retreat in retreats %}
+                        {% for duration in durations %}
                         <li class="retreat-item">
-                            <a href="{{ retreat.page.url }}">
-                                {{ retreat.available_retreat.start_date|date:"M j" }} – {{ retreat.available_retreat.end_date|date:"M j" }}
+                            <a href="{{ duration.page.url }}">
+                                {{ duration.start_date|date:"M j, Y" }} – {{ duration.end_date|date:"M j, Y" }}
                             </a>
                         </li>
                         {% endfor %}

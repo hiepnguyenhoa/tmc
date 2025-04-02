@@ -5,22 +5,18 @@ body {
     color: #333;
 }
 
-/* Center the page and set a fixed width */
+/* Retreat Page */
 .retreat-page {
-    max-width: 1200px; /* Set the maximum width of the page */
-    margin: 0 auto; /* Center the page horizontally */
-    padding: 20px; /* Add some padding for spacing */
-    box-sizing: border-box; /* Include padding in the width calculation */
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 /* Center the page title */
 .page-title {
+    margin-bottom: 20px;
     text-align: center;
-    margin: 20px 0;
-    margin-bottom: 40px;
-    /*font-size: 2rem;*/
-    font-weight: bold;
-    color: #333;
 }
 
 .page-title h1 {
@@ -33,6 +29,7 @@ body {
     font-size: 1.2rem;
     color: #666;
     margin-top: 10px;
+    text-align: center;
 }
 
 /* Main content layout */
@@ -87,10 +84,16 @@ section h3 {
     font-size: 18px;
 }
 
+/* Retreat Duration Inline Layout */
 .retreat-duration {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: flex; /* Use flexbox for inline layout */
+    justify-content: space-between; /* Space between the text and the button */
+    align-items: center; /* Align items vertically in the center */
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 15px; /* Add space between duration items */
+    padding-bottom: 10px; /* Optional: Add padding for better separation */
+    border-bottom: 1px solid #ddd; /* Optional: Add a subtle divider between items */
 }
 
 .duration-option {
@@ -181,6 +184,7 @@ hr {
 
 /* Available Retreats Section */
 .available-retreats {
+    margin-top: 30px;
     border: 1px solid #ccc; /* Add a 1px border */
     grid-column: 1 / -1;
     /* Span across both panels */
@@ -192,9 +196,11 @@ hr {
 }
 
 .available-retreats h2 {
-    text-align: center;
-    font-size: 1.8rem;
-    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: left; /* Align to the left */
 }
 
 .available-retreats ul {
@@ -230,6 +236,11 @@ hr {
     text-align: center;
 }
 
+/* Retreat Index Page - Center Category Name */
+.retreat-index-page .category-name {
+    text-align: center; /* Center the category name horizontally */
+}
+
 /* Retreat Categories Grid */
 .retreat-categories {
     display: grid;
@@ -237,22 +248,56 @@ hr {
     gap: 20px;
 }
 
+/* Retreat Categories */
 .retreat-category {
-    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 15px;
+    background-color: #faf3d2;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
 }
 
 .category-name {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #5a2d1a; /* Brown color for the header */
+    color: #5a2d1a;
+    text-align: left; /* Align to the left */
 }
 
+.retreat-durations {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.retreat-duration {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.register-button {
+    margin: 0; /* Remove any top margin to align with the text */
+}
+
+.register-button a {
+    text-decoration: none;
+    color: #fff;
+    background-color: #1a73e8;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    white-space: nowrap; /* Prevent the button text from wrapping */
+}
+
+.register-button a:hover {
+    background-color: #1558b0;
+}
+
+/* Retreat List */
 .retreat-list {
     list-style: none;
     padding: 0;
@@ -267,9 +312,62 @@ hr {
 
 .retreat-item a {
     text-decoration: none;
-    color: #333;
+    color: #1a73e8;
 }
 
 .retreat-item a:hover {
     text-decoration: underline;
+}
+
+/* Registration Page */
+.registration-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #faf3d2;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.registration-page h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.registration-page form div {
+    margin-bottom: 15px;
+}
+
+.registration-page label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.registration-page input,
+.registration-page select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.registration-page button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.registration-page button:hover {
+    background-color: #1558b0;
 }

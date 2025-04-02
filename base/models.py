@@ -63,27 +63,3 @@ class Coordinator(models.Model):
 
     def __str__(self):
         return self.name
-
-
-@register_snippet
-class AvailableRetreat(models.Model):
-    category = models.ForeignKey(
-        RetreatCategory,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="available_retreats",
-    )
-    start_date = models.DateField()
-    end_date = models.DateField()
-    note = models.TextField(blank=True, null=True)
-
-    panels = [
-        FieldPanel("category"),
-        FieldPanel("start_date"),
-        FieldPanel("end_date"),
-        FieldPanel("note"),
-    ]
-
-    def __str__(self):
-        return f"{self.start_date} - {self.end_date}"
