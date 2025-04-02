@@ -184,7 +184,6 @@ hr {
 
 /* Available Retreats Section */
 .available-retreats {
-    margin-top: 30px;
     border: 1px solid #ccc; /* Add a 1px border */
     grid-column: 1 / -1;
     /* Span across both panels */
@@ -256,6 +255,7 @@ hr {
     border-radius: 8px;
     background-color: #faf3d2;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 .category-name {
@@ -339,6 +339,64 @@ hr {
 
 .registration-page form div {
     margin-bottom: 15px;
+}
+
+.registration-page label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.registration-page input,
+.registration-page select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.registration-page button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.registration-page button:hover {
+    background-color: #1558b0;
+}
+
+/* Registration Page */
+.registration-page {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #faf3d2;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.registration-page h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.registration-page form div {
+    margin-bottom: 15px;
+}
+
+/* Registration Form */
+.registration-page form {
+    margin-top: 20px; /* Add space above the form */
 }
 
 .registration-page label {

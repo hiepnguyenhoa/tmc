@@ -2,25 +2,25 @@
 
 {% block content %}
 <div class="registration-page">
-    <h1>
-        Register for 
+    <b>
+        Register for
         {% if duration.category %}
             {{ duration.category.name }}
         {% else %}
             Uncategorized
         {% endif %}
-    </h1>
-    <p>{{ duration.start_date|date:"M j, Y" }} – {{ duration.end_date|date:"M j, Y" }}</p>
+    </b>
+    <p><h2>{{ duration.start_date|date:"M j, Y" }} – {{ duration.end_date|date:"M j, Y" }}</h2></p>
 
     <form method="post">
         {% csrf_token %}
         <div>
             <label for="last_name">Last Name:</label>
-            <input type="text" id="last_name" name="last_name" required>
+            <input type="text" id="last_name" name="last_name" placeholder="Last name"  required>
         </div>
         <div>
             <label for="first_name">First Name:</label>
-            <input type="text" id="first_name" name="first_name" required>
+            <input type="text" id="first_name" name="first_name" placeholder="First Name" required>
         </div>
         <div>
             <label for="sex">Sex:</label>
@@ -40,11 +40,11 @@
         </div>
         <div>
             <label for="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone" required>
+            <input type="tel" id="phone" name="phone" placeholder="Phone"  required>
         </div>
         <div>
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" placeholder="Email"  required>
         </div>
         <div>
             <label for="age">Age:</label>
@@ -59,18 +59,14 @@
                 <option value="over 80">Over 80</option>
             </select>
         </div>
+        <!-- Emergency Contact Section -->
         <div>
-            <label for="emergency_contact_name">Emergency Contact Name:</label>
-            <input type="text" id="emergency_contact_name" name="emergency_contact_name" required>
+            <label for="address">Emergency Contact:</label>
+            <input type="text" id="emergency_contact_name" name="emergency_contact_name" placeholder="Name" required>
+            <input type="tel" id="emergency_contact_phone" name="emergency_contact_phone" placeholder="Phone" required>
+            <input type="text" id="emergency_contact_relation" name="emergency_contact_relation" placeholder="Relation" required>
         </div>
-        <div>
-            <label for="emergency_contact_phone">Emergency Contact Phone:</label>
-            <input type="tel" id="emergency_contact_phone" name="emergency_contact_phone" required>
-        </div>
-        <div>
-            <label for="emergency_contact_relation">Emergency Contact Relation:</label>
-            <input type="text" id="emergency_contact_relation" name="emergency_contact_relation" required>
-        </div>
+        <hr>
         <button type="submit">Submit</button>
     </form>
 </div>
