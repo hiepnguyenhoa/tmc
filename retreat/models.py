@@ -54,6 +54,47 @@ class RetreatDuration(models.Model):
         return f"{self.category.name if self.category else 'Uncategorized'}: {self.start_date} - {self.end_date}"
 
 
+class Registration(models.Model):
+    retreat_duration = models.ForeignKey(
+        RetreatDuration,
+        on_delete=models.CASCADE,
+        related_name="registrations",
+        help_text="The retreat duration the user is registering for.",
+    )
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    sex = models.CharField(
+        max_length=50,
+        choices=[("male", "Male"), ("female", "Female"), ("monk", "Monk"), ("nun", "Nun")],
+    )
+    address = models.TextField()
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+    age = models.CharField(
+        max_length=50,
+        choices=[
+            ("18-19", "18-19"),
+            ("20-30", "20-30"),
+            ("30-40", "30-40"),
+            ("40-50", "40-50"),
+            ("50-60", "50-60"),
+            ("60-70", "60-70"),
+            ("70-80", "70-80"),
+            ("over 80", "Over 80"),
+        ],
+    )
+    emergency_contact_name = models.CharField(max_length=255)
+    emergency_contact_phone = models.CharField(max_length=20)
+    emergency_contact_relation = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.retreat_duration}"
+
+    class Meta:
+        verbose_name = "Registration"
+        verbose_name_plural = "Registrations"
+
+
 class RetreatPage(Page):
     teacher_biography = models.ForeignKey(
         TeacherBiography,

@@ -1,0 +1,51 @@
+{% extends "wagtailadmin/base.html" %}
+
+{% block content %}
+<div class="section">
+    <h1>Registrations</h1>
+
+    <!-- Retreat Filter -->
+    <form method="get" class="filter-form">
+        <label for="retreat">Filter by Retreat:</label>
+        <select name="retreat" id="retreat" onchange="this.form.submit()">
+            <option value="">All Retreats</option>
+            {% for retreat in retreats %}
+            <option value="{{ retreat.page_id }}" {% if selected_retreat and retreat.page_id == selected_retreat.page_id %}selected{% endif %}>
+                {{ retreat.page__title }}
+            </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <table class="listing">
+        <thead>
+            <tr>
+                <th>Retreat Duration</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Age</th>
+                <th>Sex</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registration in registrations %}
+            <tr>
+                <td>{{ registration.retreat_duration }}</td>
+                <td>{{ registration.first_name }}</td>
+                <td>{{ registration.last_name }}</td>
+                <td>{{ registration.email }}</td>
+                <td>{{ registration.phone }}</td>
+                <td>{{ registration.age }}</td>
+                <td>{{ registration.sex }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No registrations found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
