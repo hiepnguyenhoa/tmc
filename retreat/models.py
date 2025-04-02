@@ -1,36 +1,13 @@
-from itertools import groupby
 from datetime import date
+from itertools import groupby
 
 from django.db import models
 from modelcluster.fields import ParentalKey
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField
 from wagtail.models import Page
-from wagtail.snippets.models import register_snippet
 
-from base.models import Coordinator, TeacherBiography
-
-
-@register_snippet
-class RetreatCategory(models.Model):
-    name = models.CharField(max_length=255, unique=True, help_text="Name of the retreat category")
-    display_order = models.IntegerField(
-        default=0,
-        help_text="Higher numbers appear first in the retreat index page."
-    )
-
-    panels = [
-        FieldPanel("name"),
-        FieldPanel("display_order"),
-    ]
-
-    class Meta:
-        ordering = ["-display_order", "name"]  # Default ordering by descending display_order
-        verbose_name = "Retreat Category"
-        verbose_name_plural = "Retreat Categories"
-
-    def __str__(self):
-        return self.name
+from base.models import Coordinator, TeacherBiography, RetreatCategory
 
 
 class RetreatPageCoordinator(models.Model):
@@ -51,9 +28,6 @@ class RetreatPageCoordinator(models.Model):
 
 
 class RetreatDuration(models.Model):
-    """
-    Represents a duration of a retreat, associated with a RetreatPage.
-    """
     page = ParentalKey(
         "RetreatPage",
         on_delete=models.CASCADE,
@@ -71,9 +45,9 @@ class RetreatDuration(models.Model):
     )
 
     panels = [
+        FieldPanel("category"),  # This allows selecting a category in the admin interface
         FieldPanel("start_date"),
         FieldPanel("end_date"),
-        FieldPanel("category"),
     ]
 
     def __str__(self):

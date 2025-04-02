@@ -7,10 +7,10 @@ from wagtail.snippets.models import register_snippet
 
 @register_snippet
 class RetreatCategory(models.Model):
-    name = models.CharField(max_length=255, help_text="Name of the retreat category")
+    name = models.CharField(max_length=255, unique=True, help_text="Name of the retreat category")
     display_order = models.IntegerField(
         default=0,
-        help_text="Smaller numbers appear first in the retreat index page."
+        help_text="Higher numbers appear first in the retreat index page."
     )
 
     panels = [
@@ -19,7 +19,7 @@ class RetreatCategory(models.Model):
     ]
 
     class Meta:
-        ordering = ["display_order", "name"]  # Default ordering by descending display_order
+        ordering = ["-display_order", "name"]  # Default ordering by descending display_order
         verbose_name = "Retreat Category"
         verbose_name_plural = "Retreat Categories"
 
