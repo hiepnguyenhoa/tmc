@@ -1,7 +1,7 @@
 from wagtail import hooks
 from wagtail.admin.menu import MenuItem
 from django.urls import path
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from .models import Registration, RetreatDuration
 
@@ -30,11 +30,19 @@ def registrations_view(request):
     )
 
 
-# Register the custom admin URL
+# Custom view to display registration details in a popup
+@staff_member_required
+def registration_detail_view(request, registration_id):
+    registration = get_object_or_404(Registration, id=registration_id)
+    return render(request, "retreat/registration_detail_popup.html", {"registration": registration})
+
+
+# Register the custom admin URLs
 @hooks.register("register_admin_urls")
 def register_admin_urls():
     return [
         path("registrations/", registrations_view, name="registrations_admin"),
+        path("registrations/<int:registration_id>/", registration_detail_view, name="registration_detail"),
     ]
 
 

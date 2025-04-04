@@ -25,8 +25,7 @@
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>Age</th>
-                <th>Sex</th>
+                <th>Details</th>
             </tr>
         </thead>
         <tbody>
@@ -37,12 +36,13 @@
                 <td>{{ registration.last_name }}</td>
                 <td>{{ registration.email }}</td>
                 <td>{{ registration.phone }}</td>
-                <td>{{ registration.age }}</td>
-                <td>{{ registration.sex }}</td>
+                <td>
+                    <a href="/admin/registrations/{{ registration.id }}/" target="_blank">View Details</a>
+                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="7">No registrations found.</td>
+                <td colspan="6">No registrations found.</td>
             </tr>
             {% endfor %}
         </tbody>
