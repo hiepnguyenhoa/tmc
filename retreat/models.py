@@ -7,7 +7,7 @@ from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField
 from wagtail.models import Page
 
-from base.models import Coordinator, TeacherBiography, RetreatCategory
+from base.models import Coordinator, TeacherBiography, RetreatCategory, RegistrationStatus
 
 
 class RetreatPageCoordinator(models.Model):
@@ -86,9 +86,26 @@ class Registration(models.Model):
     emergency_contact_name = models.CharField(max_length=255)
     emergency_contact_phone = models.CharField(max_length=20)
     emergency_contact_relation = models.CharField(max_length=255)
+    status = models.ForeignKey(
+        RegistrationStatus,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="registrations",
+        help_text="The current status of the registration.",
+    )
+
+    def save(self, *args, **kwargs):
+        # Set the initial status to "Registered" if not already set
+        if not self.status:
+            self.status, _ = RegistrationStatus.objects.get_or_create(
+                name="Registered",
+                defaults={"description": "Default status for new registrations."},
+            )
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} - {self.retreat_duration}"
+        return f"{self.first_name} {self.last_name} - {self.retreat_duration} ({self.status})"
 
     class Meta:
         verbose_name = "Registration"

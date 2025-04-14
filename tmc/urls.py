@@ -11,11 +11,14 @@ from retreat import views
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
+    path("admin/registrations/", views.registrations_admin_view, name="registrations_admin"),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path('register/<int:duration_id>/', views.register_page, name='register_page'),
     path("success/", views.success_page, name="success_page"),
+    
+    path('cms/', include(wagtail_urls)),  # Wagtail URLs
 ]
 
 

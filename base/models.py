@@ -63,3 +63,21 @@ class Coordinator(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@register_snippet
+class RegistrationStatus(models.Model):
+    name = models.CharField(max_length=50, unique=True, help_text="Name of the status (e.g., Registered, Accepted, Rejected)")
+    description = models.TextField(blank=True, help_text="Optional description of the status")
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("description"),
+    ]
+
+    class Meta:
+        verbose_name = "Registration Status"
+        verbose_name_plural = "Registration Statuses"
+
+    def __str__(self):
+        return self.name

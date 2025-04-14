@@ -10,8 +10,8 @@
         <select name="retreat" id="retreat" onchange="this.form.submit()">
             <option value="">All Retreats</option>
             {% for retreat in retreats %}
-            <option value="{{ retreat.page_id }}" {% if selected_retreat and retreat.page_id == selected_retreat.page_id %}selected{% endif %}>
-                {{ retreat.page__title }}
+            <option value="{{ retreat.id }}" {% if selected_retreat and retreat.id == selected_retreat.id %}selected{% endif %}>
+                {{ retreat.title }}
             </option>
             {% endfor %}
         </select>
@@ -25,6 +25,7 @@
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Status</th>
                 <th>Details</th>
             </tr>
         </thead>
@@ -37,12 +38,25 @@
                 <td>{{ registration.email }}</td>
                 <td>{{ registration.phone }}</td>
                 <td>
+                    <form method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="registration_id" value="{{ registration.id }}">
+                        <select name="status_id" onchange="this.form.submit()"> <!-- Auto-submit on change -->
+                            {% for status in statuses %}
+                            <option value="{{ status.id }}" {% if registration.status.id == status.id %}selected{% endif %}>
+                                {{ status.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </td>
+                <td>
                     <a href="/admin/registrations/{{ registration.id }}/" target="_blank">View Details</a>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6">No registrations found.</td>
+                <td colspan="7">No registrations found.</td>
             </tr>
             {% endfor %}
         </tbody>
