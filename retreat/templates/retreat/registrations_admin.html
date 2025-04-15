@@ -5,7 +5,8 @@
     <h1>Registrations</h1>
 
     <!-- Retreat Filter -->
-    <form method="get" class="filter-form">
+    <form method="post" enctype="multipart/form-data" class="filter-form">
+        {% csrf_token %}
         <label for="retreat">Filter by Retreat:</label>
         <select name="retreat" id="retreat" onchange="this.form.submit()">
             <option value="">All Retreats</option>
@@ -15,6 +16,14 @@
             </option>
             {% endfor %}
         </select>
+    </form>
+
+    <!-- Upload PDF Form -->
+    <form method="post" enctype="multipart/form-data" style="display: inline;">
+        {% csrf_token %}
+        <label for="pdf_file">Upload PDF:</label>
+        <input type="file" name="pdf_file" accept=".pdf" required>
+        <button type="submit" name="upload_pdf" class="button">Upload</button>
     </form>
 
     <table class="listing">
