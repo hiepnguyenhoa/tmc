@@ -67,9 +67,9 @@ def registrations_admin_view(request):
                 print(f"ERROR: {e}")  # Debugging
         return redirect("registrations_admin")  # Redirect to the same page after updating
 
-    # Fetch all unique retreats
+    # Fetch all retreats
     retreats = RetreatPage.objects.live()  # Fetch only live RetreatPages
-    selected_retreat_id = request.GET.get("retreat")
+    selected_retreat_id = request.GET.get("retreat")  # Get the selected retreat ID from the query parameters
     registrations = Registration.objects.select_related("retreat_duration__page").all()
 
     # Filter registrations by selected retreat
@@ -96,3 +96,8 @@ def registrations_admin_view(request):
             "selected_retreat": selected_retreat,
         },
     )
+
+
+def registration_detail_popup(request, registration_id):
+    registration = get_object_or_404(Registration, id=registration_id)
+    return render(request, "retreat/registration_detail_popup.html", {"registration": registration})

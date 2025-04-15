@@ -7,43 +7,59 @@
             font-family: Arial, sans-serif;
             padding: 20px;
         }
-        .detail-container {
+
+        .popup {
             max-width: 500px;
             margin: 0 auto;
         }
-        .detail-container h2 {
+
+        .popup h2 {
             margin-bottom: 20px;
         }
-        .detail-container p {
+
+        .popup p {
             margin: 10px 0;
         }
-        .close-button {
+
+        .popup button {
             display: inline-block;
             margin-top: 20px;
             padding: 10px 15px;
             background-color: #007bff;
             color: white;
-            text-decoration: none;
+            border: none;
             border-radius: 5px;
+            cursor: pointer;
         }
-        .close-button:hover {
+
+        .popup button:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div class="detail-container">
-        <h2>Registration Details</h2>
-        <p><strong>First Name:</strong> {{ registration.first_name }}</p>
-        <p><strong>Last Name:</strong> {{ registration.last_name }}</p>
-        <p><strong>Email:</strong> {{ registration.email }}</p>
-        <p><strong>Phone:</strong> {{ registration.phone }}</p>
-        <p><strong>Age:</strong> {{ registration.age }}</p>
-        <p><strong>Sex:</strong> {{ registration.sex }}</p>
-        <p><strong>Emergency Contact Name:</strong> {{ registration.emergency_contact_name }}</p>
-        <p><strong>Emergency Contact Phone:</strong> {{ registration.emergency_contact_phone }}</p>
-        <p><strong>Emergency Contact Relation:</strong> {{ registration.emergency_contact_relation }}</p>
-        <a href="#" class="close-button" onclick="window.close(); return false;">Close</a>
-    </div>
+<div class="popup">
+    <h2>Registration Details</h2>
+    <p><strong>First Name:</strong> {{ registration.first_name }}</p>
+    <p><strong>Last Name:</strong> {{ registration.last_name }}</p>
+    <p><strong>Email:</strong> {{ registration.email }}</p>
+    <p><strong>Phone:</strong> {{ registration.phone }}</p>
+    <p><strong>Address:</strong> {{ registration.address }}</p>
+    <p><strong>Sex:</strong> {{ registration.sex }}</p>
+    <p><strong>Age:</strong> {{ registration.age }}</p>
+    <p><strong>Emergency Contact Name:</strong> {{ registration.emergency_contact_name }}</p>
+    <p><strong>Emergency Contact Phone:</strong> {{ registration.emergency_contact_phone }}</p>
+    <p><strong>Emergency Contact Relation:</strong> {{ registration.emergency_contact_relation }}</p>
+    <p><strong>Retreat Duration:</strong> {{ registration.retreat_duration }}</p>
+    <p><strong>Status:</strong> {{ registration.status }}</p>
+
+    {% if registration.pdf_path %}
+    <p><strong>PDF Path:</strong> <a href="{{ registration.pdf_path }}" target="_blank">{{ registration.pdf_path }}</a></p>
+    {% else %}
+    <p><strong>PDF Path:</strong> Not Available</p>
+    {% endif %}
+
+    <button onclick="window.close()">Close</button>
+</div>
 </body>
 </html>

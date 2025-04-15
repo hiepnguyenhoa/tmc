@@ -5,8 +5,7 @@
     <h1>Registrations</h1>
 
     <!-- Retreat Filter -->
-    <form method="post" enctype="multipart/form-data" class="filter-form">
-        {% csrf_token %}
+    <form method="get" class="filter-form">
         <label for="retreat">Filter by Retreat:</label>
         <select name="retreat" id="retreat" onchange="this.form.submit()">
             <option value="">All Retreats</option>
@@ -26,49 +25,51 @@
         <button type="submit" name="upload_pdf" class="button">Upload</button>
     </form>
 
-    <table class="listing">
-        <thead>
-            <tr>
-                <th>Retreat Duration</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Status</th>
-                <th>Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for registration in registrations %}
-            <tr>
-                <td>{{ registration.retreat_duration }}</td>
-                <td>{{ registration.first_name }}</td>
-                <td>{{ registration.last_name }}</td>
-                <td>{{ registration.email }}</td>
-                <td>{{ registration.phone }}</td>
-                <td>
-                    <form method="post" style="display: inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="registration_id" value="{{ registration.id }}">
-                        <select name="status_id" onchange="this.form.submit()"> <!-- Auto-submit on change -->
-                            {% for status in statuses %}
-                            <option value="{{ status.id }}" {% if registration.status.id == status.id %}selected{% endif %}>
-                                {{ status.name }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </form>
-                </td>
-                <td>
-                    <a href="/admin/registrations/{{ registration.id }}/" target="_blank">View Details</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="7">No registrations found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="section">
+        <table class="listing">
+            <thead>
+                <tr>
+                    <th>Retreat Duration</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registration in registrations %}
+                <tr>
+                    <td>{{ registration.retreat_duration }}</td>
+                    <td>{{ registration.first_name }}</td>
+                    <td>{{ registration.last_name }}</td>
+                    <td>{{ registration.email }}</td>
+                    <td>{{ registration.phone }}</td>
+                    <td>
+                        <form method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="registration_id" value="{{ registration.id }}">
+                            <select name="status_id" onchange="this.form.submit()"> <!-- Auto-submit on change -->
+                                {% for status in statuses %}
+                                <option value="{{ status.id }}" {% if registration.status.id == status.id %}selected{% endif %}>
+                                    {{ status.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </td>
+                    <td>
+                        <a href="/admin/registrations/{{ registration.id }}/" target="_blank">View Details</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">No registrations found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

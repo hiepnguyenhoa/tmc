@@ -41,7 +41,7 @@ def extract_and_create_registration(pdf_path, retreat_duration_id):
     emergency_contact_relation = form_data.get("Relation", "").strip()
 
     # Get the retreat duration
-    retreat_duration = RetreatDuration.objects.get(id=4)
+    retreat_duration = RetreatDuration.objects.get(id=retreat_duration_id)
 
     # Create the registration
     registration = Registration.objects.create(
@@ -56,6 +56,7 @@ def extract_and_create_registration(pdf_path, retreat_duration_id):
         emergency_contact_name=emergency_contact_name,
         emergency_contact_phone=emergency_contact_phone,
         emergency_contact_relation=emergency_contact_relation,
+        pdf_path=pdf_path,  # Save the PDF path
     )
 
     print(f"DEBUG: Created registration for {first_name} {last_name}")

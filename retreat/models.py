@@ -94,6 +94,7 @@ class Registration(models.Model):
         related_name="registrations",
         help_text="The current status of the registration.",
     )
+    pdf_path = models.CharField(max_length=255, null=True, blank=True)  # Path to the uploaded PDF file
 
     def save(self, *args, **kwargs):
         # Set the initial status to "Registered" if not already set
