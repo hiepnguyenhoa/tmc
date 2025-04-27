@@ -3,38 +3,38 @@ from itertools import groupby
 
 from django.db import models
 from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField
 from wagtail.models import Page
+from wagtail.snippets.models import register_snippet
 
-from base.models import Coordinator, TeacherBiography, RetreatCategory, RegistrationStatus
+from base.models import TeacherBiography, RegistrationStatus, BaseEvent
 
 
-class RetreatPageCoordinator(models.Model):
-    page = ParentalKey(
-        "RetreatPage",
-        on_delete=models.CASCADE,
-        related_name="coordinators",
-    )
-    coordinator = models.ForeignKey(
-        Coordinator,
-        on_delete=models.CASCADE,
-        related_name="+",
+@register_snippet
+class RetreatCategory(models.Model):
+    name = models.CharField(max_length=255, unique=True, help_text="Name of the retreat category")
+    display_order = models.IntegerField(
+        default=0,
+        help_text="Higher numbers appear first in the retreat index page."
     )
 
     panels = [
-        FieldPanel("coordinator"),
+        FieldPanel("name"),
+        FieldPanel("display_order"),
     ]
+
+    class Meta:
+        ordering = ["-display_order", "name"]  # Default ordering by descending display_order
+        verbose_name = "Retreat Category"
+        verbose_name_plural = "Retreat Categories"
+
+    def __str__(self):
+        return self.name
 
 
 class RetreatDuration(models.Model):
-    page = ParentalKey(
-        "RetreatPage",
-        on_delete=models.CASCADE,
-        related_name="retreat_durations",
-    )
-    start_date = models.DateField()
-    end_date = models.DateField()
     category = models.ForeignKey(
         RetreatCategory,
         null=True,
@@ -43,15 +43,68 @@ class RetreatDuration(models.Model):
         related_name="retreat_durations",
         help_text="Category of the retreat (e.g., 7-Day Retreat)",
     )
+    retreat_event = ParentalKey(  # Changed to ParentalKey
+        "RetreatEvent",
+        on_delete=models.CASCADE,
+        related_name="retreat_durations",
+        help_text="The retreat event this duration belongs to.",
+    )
+    start_date = models.DateField(help_text="The start date of the retreat duration.")
+    end_date = models.DateField(help_text="The end date of the retreat duration.")
 
     panels = [
-        FieldPanel("category"),  # This allows selecting a category in the admin interface
+        FieldPanel("category"),
         FieldPanel("start_date"),
         FieldPanel("end_date"),
     ]
 
     def __str__(self):
         return f"{self.category.name if self.category else 'Uncategorized'}: {self.start_date} - {self.end_date}"
+
+
+class RetreatEvent(BaseEvent, ClusterableModel):
+    """
+    Represents a retreat event with additional properties.
+    """
+    retreat_page = ParentalKey(
+        "RetreatPage",
+        on_delete=models.CASCADE,
+        related_name="retreat_event",
+        help_text="The retreat page this event belongs to.",
+    )
+    teacher_biography = models.ForeignKey(
+        TeacherBiography,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+
+    panels = BaseEvent.panels + [
+        FieldPanel("teacher_biography"),
+        FieldPanel("zoom_meeting"),
+        InlinePanel("retreat_durations", label="Retreat Durations"),
+    ]
+
+    def after_save(self):
+        """
+        Custom logic to handle ManyToMany relationships after saving.
+        """
+        if hasattr(self, "_coordinators_to_set"):
+            print("DEBUG: Setting coordinators:", self._coordinators_to_set)
+            self.coordinators.set(self._coordinators_to_set)
+            del self._coordinators_to_set
+
+    def set_coordinators(self, coordinators):
+        """
+        Temporarily store coordinators to be set after the object is saved.
+        """
+        if self.pk:
+            # If the object is already saved, set coordinators immediately
+            self.coordinators.set(coordinators)
+        else:
+            # Otherwise, store coordinators to be set after saving
+            self._coordinators_to_set = coordinators
 
 
 class Registration(models.Model):
@@ -114,71 +167,34 @@ class Registration(models.Model):
 
 
 class RetreatPage(Page):
-    teacher_biography = models.ForeignKey(
-        TeacherBiography,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
-    )
-    zoom_link = models.URLField(blank=True, null=True)
-    zoom_room_id = models.CharField(max_length=255, blank=True, null=True)
-    zoom_room_password = models.CharField(max_length=255, blank=True, null=True)
-    intro = RichTextField(blank=True)
-
+    """
+    Represents a retreat page with an associated retreat event.
+    """
     content_panels = Page.content_panels + [
-        FieldPanel("teacher_biography"),
-        MultiFieldPanel(
-            [
-                InlinePanel("coordinators", label="Coordinator"),
-            ],
-            heading="Coordinators",
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel("zoom_link"),
-                FieldPanel("zoom_room_id"),
-                FieldPanel("zoom_room_password"),
-            ],
-            heading="Zoom Information",
-        ),
-        FieldPanel("intro"),
-        InlinePanel("retreat_durations", label="Retreat Durations"),
+        InlinePanel("retreat_event", label="Retreat Events"),  # Use InlinePanel to manage RetreatEvent
     ]
 
     parent_page_types = ["RetreatIndexPage"]
     subpage_types = []
 
-    def grouped_available_retreats(self):
-        # Get the current year
-        current_year = date.today().year
+    def get_context(self, request):
+        """
+        Adds retreat event properties to the context for the template.
+        """
+        context = super().get_context(request)
+        retreat_event = self.retreat_event.first()  # Access the related RetreatEvent
+        context["retreat_event"] = retreat_event
+        context["teacher_biography"] = retreat_event.teacher_biography if retreat_event else None
 
-        # Filter retreat durations by start date in the current year or later
-        durations = self.retreat_durations.filter(start_date__year__gte=current_year)
+        # Fix: Call .all() on coordinators to make it iterable
+        context["coordinators"] = retreat_event.coordinators.all() if retreat_event and retreat_event.coordinators else None
 
-        # Group by category
-        grouped = groupby(
-            sorted(
-                durations,
-                key=lambda d: d.category.name if d.category else '',
-            ),
-            key=lambda d: d.category.name if d.category else '',
-        )
+        context["zoom_meeting"] = retreat_event.zoom_meeting if retreat_event else None
 
-        return {category: list(items) for category, items in grouped}
+        # Debug print statement
+        print("DEBUG: zoom_meeting =", context["zoom_meeting"])
 
-    def grouped_retreat_durations(self):
-        # Get all retreat durations for this page
-        durations = self.retreat_durations.all()
-
-        # Group durations by category
-        grouped = groupby(
-            sorted(durations, key=lambda d: d.category.name if d.category else "Uncategorized"),
-            key=lambda d: d.category.name if d.category else "Uncategorized",
-        )
-
-        # Return grouped data as a dictionary
-        return {category: list(items) for category, items in grouped}
+        return context
 
 
 class RetreatIndexPage(Page):
@@ -202,7 +218,7 @@ class RetreatIndexPage(Page):
         retreat_durations = []
         for retreat in retreats:
             # Filter retreat durations by start date
-            filtered_durations = retreat.retreat_durations.filter(start_date__year__gte=current_year)
+            filtered_durations = retreat.retreat_event.retreat_durations.filter(start_date__year__gte=current_year)
             retreat_durations.extend(filtered_durations)
 
         # Group durations by year

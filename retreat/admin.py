@@ -35,13 +35,11 @@ class RegistrationAdmin(admin.ModelAdmin):
 admin.site.register(Registration, RegistrationAdmin)
 
 
+@admin.register(RetreatDuration)
 class RetreatDurationAdmin(admin.ModelAdmin):
-    list_display = ("page", "start_date", "end_date", "category")
-    list_filter = ("category",)
-    search_fields = ("page__title", "category__name")
-
-
-admin.site.register(RetreatDuration, RetreatDurationAdmin)
+    list_display = ("retreat_event", "category", "start_date", "end_date")
+    list_filter = ("category", "start_date", "end_date")
+    search_fields = ("retreat_event__title", "category__name")
 
 
 def registrations_admin_view(request):

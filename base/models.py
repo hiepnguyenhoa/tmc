@@ -6,25 +6,26 @@ from wagtail.snippets.models import register_snippet
 
 
 @register_snippet
-class RetreatCategory(models.Model):
-    name = models.CharField(max_length=255, unique=True, help_text="Name of the retreat category")
-    display_order = models.IntegerField(
-        default=0,
-        help_text="Higher numbers appear first in the retreat index page."
-    )
+class ZoomMeetingInfo(models.Model):
+    """
+    Represents Zoom meeting information.
+    """
+    meeting_link = models.URLField(help_text="The Zoom meeting link.")
+    meeting_id = models.CharField(max_length=255, help_text="The Zoom meeting ID.")
+    meeting_password = models.CharField(max_length=255, help_text="The Zoom meeting password.")
 
     panels = [
-        FieldPanel("name"),
-        FieldPanel("display_order"),
+        FieldPanel("meeting_link"),
+        FieldPanel("meeting_id"),
+        FieldPanel("meeting_password"),
     ]
 
-    class Meta:
-        ordering = ["-display_order", "name"]  # Default ordering by descending display_order
-        verbose_name = "Retreat Category"
-        verbose_name_plural = "Retreat Categories"
-
     def __str__(self):
-        return self.name
+        return f"Zoom Meeting (ID: {self.meeting_id})"
+
+    class Meta:
+        verbose_name = "Zoom Meeting Info"
+        verbose_name_plural = "Zoom Meeting Infos"
 
 
 @register_snippet
@@ -67,7 +68,8 @@ class Coordinator(models.Model):
 
 @register_snippet
 class RegistrationStatus(models.Model):
-    name = models.CharField(max_length=50, unique=True, help_text="Name of the status (e.g., Registered, Accepted, Rejected)")
+    name = models.CharField(max_length=50, unique=True,
+                            help_text="Name of the status (e.g., Registered, Accepted, Rejected)")
     description = models.TextField(blank=True, help_text="Optional description of the status")
 
     panels = [
@@ -81,3 +83,36 @@ class RegistrationStatus(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class BaseEvent(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+    coordinators = models.ManyToManyField(
+        "base.Coordinator",
+        blank=True,
+        related_name="events",
+        help_text="Coordinators for this event.",
+    )
+    zoom_meeting = models.ForeignKey(
+        "ZoomMeetingInfo",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="events",
+        help_text="Zoom meeting information for the event."
+    )
+
+    panels = [
+        FieldPanel("title"),
+        FieldPanel("description"),
+        FieldPanel("start_time"),
+        FieldPanel("end_time"),
+        FieldPanel("coordinators"),  # Add coordinators to the admin panel
+        FieldPanel("zoom_meeting"),
+    ]
+
+    def __str__(self):
+        return self.title

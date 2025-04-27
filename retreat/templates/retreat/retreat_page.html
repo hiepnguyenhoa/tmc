@@ -4,6 +4,11 @@
 {% load wagtailimages_tags %}
 
 {% block content %}
+
+<!-- Debugging teacher_biography -->
+<!--<script>-->
+<!--    console.log("DEBUG: teacher_biography = {{ teacher_biography|default:"None" }}");-->
+<!--</script>-->
 <div class="retreat-page">
     <!-- Page Title -->
     <div class="page-title">
@@ -17,14 +22,13 @@
     <div class="main-content">
         <!-- Left Panel -->
         <div class="left-panel">
-            {% if page.teacher_biography %}
+            {% if teacher_biography %}
             <div class="teacher-biography">
                 <div class="teacher-info">
-                    {% if page.teacher_biography.image %}
+                    {% if teacher_biography.image %}
                     <!-- Use wagtailimages_tags to render the image -->
-                    <!-- Resize the image to 1/4 of its original size -->
-                    {% image page.teacher_biography.image width-400 as teacher_image %}
-                    <img class="teacher-portrait" src="{{ teacher_image.url }}" alt="{{ page.teacher_biography.name }}">
+                    {% image teacher_biography.image width-400 as teacher_image %}
+                    <img class="teacher-portrait" src="{{ teacher_image.url }}" alt="{{ teacher_biography.name }}">
                     {% endif %}
                 </div>
             </div>
@@ -35,16 +39,16 @@
         <div class="right-panel">
             <section>👤 <a href="#">Teacher's Biography</a></section>
             <!-- Coordinators -->
-            {% if page.coordinators.all %}
+            {% if coordinators %}
             <section class="coordinators">
                 <strong>Coordinators</strong><br>
-                {% for coordinator in page.coordinators.all %}
-                {{ coordinator.coordinator.name }}<br>
-                {% if coordinator.coordinator.phone_number %}
-                Phone: {{ coordinator.coordinator.phone_number }}<br>
+                {% for coordinator in coordinators %}
+                {{ coordinator.name }}<br>
+                {% if coordinator.phone_number %}
+                Phone: {{ coordinator.phone_number }}<br>
                 {% endif %}
-                {% if coordinator.coordinator.email %}
-                Email: <a href="mailto:{{ coordinator.coordinator.email }}">{{ coordinator.coordinator.email }}</a>
+                {% if coordinator.email %}
+                Email: <a href="mailto:{{ coordinator.email }}">{{ coordinator.email }}</a>
                 {% endif %}
                 <br>
                 {% endfor %}
@@ -52,18 +56,12 @@
             {% endif %}
 
             <!-- Zoom Information -->
-            {% if page.zoom_link or page.zoom_room_id or page.zoom_room_password %}
+            {% if zoom_meeting %}
             <section class="zoom-info">
                 <strong>Dhamma Talk Zoom Info</strong><br>
-                {% if page.zoom_link %}
-                <a href="{{ page.zoom_link }}" target="_blank">Meeting Link</a><br>
-                {% endif %}
-                {% if page.zoom_room_id %}
-                Zoom ID: {{ page.zoom_room_id }} <br>
-                {% endif %}
-                {% if page.zoom_room_password %}
-                Password: {{ page.zoom_room_password }}
-                {% endif %}
+                <a href="{{ zoom_meeting.meeting_link }}" target="_blank">Meeting Link</a><br>
+                Zoom ID: {{ zoom_meeting.meeting_id }} <br>
+                Password: {{ zoom_meeting.meeting_password}}
             </section>
             {% endif %}
         </div>
