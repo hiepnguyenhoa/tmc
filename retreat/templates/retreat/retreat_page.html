@@ -33,7 +33,9 @@
 
         <!-- Right Panel -->
         <div class="right-panel">
-            <section>👤 <a href="#">Teacher's Biography</a></section>
+            {% if sangha_page_url %}
+            <section>👤 <a href="{{sangha_page_url}}">Teacher's Biography</a></section>
+            {% endif %}
             <!-- Coordinators -->
             {% if page.coordinators.all %}
             <section class="coordinators">
@@ -54,7 +56,7 @@
             <!-- Zoom Information -->
             {% if page.zoom_link or page.zoom_room_id or page.zoom_room_password %}
             <section class="zoom-info">
-                <strong>Dhamma Talk Zoom Info</strong><br>
+                <strong></strong><br>
                 {% if page.zoom_link %}
                 <a href="{{ page.zoom_link }}" target="_blank">Meeting Link</a><br>
                 {% endif %}
@@ -65,6 +67,15 @@
                 Password: {{ page.zoom_room_password }}
                 {% endif %}
             </section>
+            {% endif %}
+
+            {% if page.zoom_information %}
+            <div class="zoom-information">
+                <strong>Dhamma Talk Zoom Info</strong>
+                <p><strong><a href="{{ page.zoom_information.zoom_link }}">Meeting Link</a></strong></p>
+                <p><strong>Room ID:</strong> {{ page.zoom_information.zoom_room_id }}</p>
+                <p><strong>Password:</strong> {{ page.zoom_information.zoom_room_password }}</p>
+            </div>
             {% endif %}
         </div>
     </div>

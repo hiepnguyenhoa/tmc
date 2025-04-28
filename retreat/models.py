@@ -7,7 +7,8 @@ from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField
 from wagtail.models import Page
 
-from base.models import Coordinator, TeacherBiography, RetreatCategory, RegistrationStatus
+from base.models import Coordinator, TeacherBiography, RetreatCategory, RegistrationStatus, ZoomInformation
+from sangha.models import SanghaPage
 
 
 class RetreatPageCoordinator(models.Model):
@@ -121,26 +122,24 @@ class RetreatPage(Page):
         on_delete=models.SET_NULL,
         related_name="+",
     )
-    zoom_link = models.URLField(blank=True, null=True)
-    zoom_room_id = models.CharField(max_length=255, blank=True, null=True)
-    zoom_room_password = models.CharField(max_length=255, blank=True, null=True)
+    zoom_information = models.ForeignKey(
+        ZoomInformation,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Select the Zoom information for this retreat.",
+    )
     intro = RichTextField(blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel("teacher_biography"),
+        FieldPanel("zoom_information"),  # Add the Zoom information snippet
         MultiFieldPanel(
             [
                 InlinePanel("coordinators", label="Coordinator"),
             ],
             heading="Coordinators",
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel("zoom_link"),
-                FieldPanel("zoom_room_id"),
-                FieldPanel("zoom_room_password"),
-            ],
-            heading="Zoom Information",
         ),
         FieldPanel("intro"),
         InlinePanel("retreat_durations", label="Retreat Durations"),
@@ -180,6 +179,15 @@ class RetreatPage(Page):
         # Return grouped data as a dictionary
         return {category: list(items) for category, items in grouped}
 
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        # Get the SanghaPage associated with the teacher_biography
+        sangha_page = SanghaPage.objects.filter(teacher=self.teacher_biography).first()
+        context["sangha_page_url"] = sangha_page.url if sangha_page else None
+
+        return context
+
 
 class RetreatIndexPage(Page):
     intro = RichTextField(blank=True)
@@ -190,6 +198,8 @@ class RetreatIndexPage(Page):
 
     parent_page_types = ["wagtailcore.Page"]
     subpage_types = ["RetreatPage"]
+
+    max_count = 1
 
     def grouped_available_retreats(self):
         # Get the current year

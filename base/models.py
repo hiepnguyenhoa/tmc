@@ -86,3 +86,35 @@ class RegistrationStatus(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@register_snippet
+class ZoomInformation(models.Model):
+    """
+    Represents Zoom information for a retreat.
+    """
+    zoom_name = models.CharField(
+        max_length=255,
+        help_text="Name of the Zoom meeting (e.g., 'Dhamma Talk')."
+    )
+    zoom_link = models.URLField(
+        help_text="Zoom meeting link."
+    )
+    zoom_room_id = models.CharField(
+        max_length=255,
+        help_text="Zoom room ID."
+    )
+    zoom_room_password = models.CharField(
+        max_length=255,
+        help_text="Zoom room password."
+    )
+
+    panels = [
+        FieldPanel("zoom_name"),
+        FieldPanel("zoom_link"),
+        FieldPanel("zoom_room_id"),
+        FieldPanel("zoom_room_password"),
+    ]
+
+    def __str__(self):
+        return self.zoom_name
