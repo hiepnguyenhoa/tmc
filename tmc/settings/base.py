@@ -38,6 +38,7 @@ STATICFILES_DIRS = [
 # Application definition
 
 INSTALLED_APPS = [
+    "sangha",
     "retreat",
     "home",
     "search",

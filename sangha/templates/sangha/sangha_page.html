@@ -1,0 +1,20 @@
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+
+<div class="sangha-page">
+    <!-- Display the Sangha member's name -->
+    <h1>{{ page.title }}</h1>
+
+    <!-- Display the Sangha member's image -->
+    {% if page.teacher.image %}
+    <div class="sangha-image">
+        {% image page.teacher.image width-600 as sangha_image %}
+        <img src="{{ sangha_image.url }}" alt="{{ page.teacher.name }}" class="img-fluid">
+    </div>
+    {% endif %}
+
+    <!-- Display the Sangha member's biography -->
+    <div class="sangha-biography">
+        {{ page.teacher.biography|richtext }}
+    </div>
+</div>

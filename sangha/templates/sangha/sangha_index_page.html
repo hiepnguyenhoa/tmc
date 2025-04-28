@@ -1,0 +1,43 @@
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<div class="sangha-index-page">
+    <!-- Display the page title -->
+    <h1>{{ page.title }}</h1>
+
+    <!-- Display the intro text -->
+    {% if page.intro %}
+    <div class="intro">
+        {{ page.intro|richtext }}
+    </div>
+    {% endif %}
+
+    <!-- Display the Sangha members in a grid -->
+    <div class="sangha-members">
+        <div class="row">
+            {% for sangha in sangha_teachers %}
+            <div class="sangha-member col-3">
+                {% if sangha.portrait %}
+                {% image sangha.portrait width-300 as portrait %}
+                <img src="{{ portrait.file.url }}" alt="{{ sangha.name }}" class="img-fluid">
+                {% endif %}
+                <h2>
+                    {% if sangha.page_url %}
+                    <a href="{{ sangha.page_url }}">{{ sangha.name }}</a>
+                    {% else %}
+                    {{ sangha.name }}
+                    {% endif %}
+                </h2>
+            </div>
+            {% if forloop.counter|divisibleby:4 and not forloop.last %}
+        </div>
+        <div class="row">
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

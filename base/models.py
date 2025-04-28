@@ -38,11 +38,16 @@ class TeacherBiography(models.Model):
         blank=True,
         related_name="+"
     )
+    is_sangha_member = models.BooleanField(
+        default=False,
+        help_text="Check this box if the teacher belongs to the Sangha."
+    )
 
     panels = [
         FieldPanel("name"),
         FieldPanel("biography"),
         FieldPanel("image"),
+        FieldPanel("is_sangha_member"),  # Add the new field to the admin panel
     ]
 
     def __str__(self):
